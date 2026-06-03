@@ -1,24 +1,22 @@
 from datasets import load_dataset
 import numpy as np
 from pathlib import Path
-import json
 
-# Загружаем датасет
-print("Загружаем датасет...")
-ds = load_dataset("rustensai/russian-handwriting-ocr")
+# Загружаем ТОЛЬКО небольшую часть датасета
+print("Загружаем небольшую часть датасета...")
+ds = load_dataset("rustensai/russian-handwriting-ocr", split="train[:1000]")  # Только первые 1000 примеров
 
-print(f"Структура датасета: {ds}")
+print(f"Загружено примеров: {len(ds)}")
 print(f"\nПример данных:")
-print(ds['train'][0])
+print(ds[0])
 
-# Создаём папку для сохранения
-output_dir = Path('./russian_data')
-output_dir.mkdir(exist_ok=True)
-
-# Исследуем структуру данных
 print("\n\nИсследование структуры...")
-sample = ds['train'][0]
+sample = ds[0]
 print(f"Ключи в sample: {sample.keys()}")
 
 for key in sample.keys():
-    print(f"{key}: {type(sample[key])}")
+    val = sample[key]
+    if hasattr(val, 'shape'):
+        print(f"{key}: {type(val)} shape={val.shape}")
+    else:
+        print(f"{key}: {type(val)}")
